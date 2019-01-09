@@ -5,6 +5,8 @@ import Navigation from "./components/navigation/Navigation";
 import Logo from "./components/logo/Logo";
 import ImageLinkForm from "./components/imageLinkForm/ImageLinkForm";
 import FaceRecognition from "./components/faceRecognition/FaceRecognition";
+import SignIn from "./components/signIn/SignIn";
+import Register from "./components/register/Register";
 import Rank from "./components/rank/Rank";
 import "./App.css";
 import params from "./particlesConfig";
@@ -17,7 +19,15 @@ class App extends Component {
   state = {
     input: "",
     url: "",
-    boxes: []
+    boxes: [],
+    route : "signIn",
+    isSignedIn : false,
+    user : {
+      name: "unknown user",
+      email: "",
+      entries: "unknown",
+      joined: "unknown"
+    }
   };
 
   onInputChange = event => {
@@ -42,6 +52,32 @@ class App extends Component {
       });
   };
 
+  loadUser = user => {
+    const { password, id, ...rest } = user;
+    this.setState({ user : rest });
+  };
+
+  signOut = () => {
+    this.setState({
+      user : {
+        name: "unknown user",
+        email: "",
+        entries: "unknown",
+        joined: "unknown"
+      }
+    });
+    this.onRouteChange("signIn");
+  }
+
+  onRouteChange = (newRoute) => {
+    if (newRoute === "home") {
+      this.setState({ isSignedIn : true })
+    } else {
+      this.setState({ isSignedIn : false })
+    }
+    this.setState({route : newRoute});
+  }
+
   generateBoxInfo = rawBoxData => {
     const boxObj = {};
     const boxPercentageValues = Object.values(rawBoxData).map(
@@ -65,18 +101,25 @@ class App extends Component {
   };
 
   render() {
-    const { url, boxes } = this.state;
+    const { url, boxes, route, isSignedIn, user } = this.state;
+    const { name, entries} = user;
     return (
       <div className="App courier">
         <Particles className="particles" params={params} />
-        <Navigation />
-        <Logo />
-        <Rank />
-        <ImageLinkForm
-          onSubmit={this.onSubmit}
-          onInputChange={this.onInputChange}
-        />
-        <FaceRecognition boxes={boxes} url={url} />
+        <Navigation isSignedIn = {isSignedIn} signOut = {this.signOut} onRouteChange = {this.onRouteChange}/>
+        {route === "signIn" && <SignIn loadUser = {this.loadUser} onRouteChange = {this.onRouteChange} />}
+        {route === "register" && <Register loadUser = {this.loadUser} onRouteChange = {this.onRouteChange}/>}
+        {route === "home" &&
+          <React.Fragment>
+            <Logo />
+            <Rank name = {name} entries = {entries} />
+            <ImageLinkForm
+              onSubmit={this.onSubmit}
+              onInputChange={this.onInputChange}
+            />
+            <FaceRecognition boxes={boxes} url={url} />
+          </React.Fragment>
+        }
       </div>
     );
   }
