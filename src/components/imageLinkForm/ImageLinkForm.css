@@ -81,12 +81,10 @@
     );
   background-size: 100px 50px;
 }
-
 button {
   cursor: pointer;
   min-width: 120px;
 }
-
 .fw600 {
   font-weight: 600;
 }

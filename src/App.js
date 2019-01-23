@@ -7,7 +7,7 @@ import ImageLinkForm from "./components/imageLinkForm/ImageLinkForm";
 import FaceRecognition from "./components/faceRecognition/FaceRecognition";
 import SignIn from "./components/signIn/SignIn";
 import Register from "./components/register/Register";
-import Rank from "./components/rank/Rank";
+import Stats from "./components/stats/Stats";
 import "./App.css";
 import params from "./particlesConfig";
 
@@ -15,20 +15,22 @@ const app = new Clarifai.App({
   apiKey: "94cc0409d4ab41698e2988f413cc60ef"
 });
 
+const initialState = {
+  input: "",
+  url: "",
+  boxes: [],
+  route: "signIn",
+  isSignedIn: false,
+  user: {
+    id: undefined,
+    username: "unknown user",
+    imageCount: 0,
+    faceCount: 0
+  }
+};
+
 class App extends Component {
-  state = {
-    input: "",
-    url: "",
-    boxes: [],
-    route : "signIn",
-    isSignedIn : false,
-    user : {
-      name: "unknown user",
-      email: "",
-      entries: "unknown",
-      joined: "unknown"
-    }
-  };
+  state = initialState;
 
   onInputChange = event => {
     this.setState({ input: event.target.value });
@@ -48,35 +50,43 @@ class App extends Component {
         );
       })
       .then(boxes => {
-        this.setState({ boxes });
+        fetch("http://localhost:4000/image", {
+          method: "post",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id: this.state.user.id,
+            faceCountIncre: boxes.length
+          })
+        });
+        this.setState({
+          boxes,
+          user: {
+            ...this.state.user,
+            imageCount: this.state.user.imageCount + 1,
+            faceCount: this.state.user.faceCount + boxes.length
+          }
+        });
       });
   };
 
   loadUser = user => {
-    const { password, id, ...rest } = user;
-    this.setState({ user : rest });
+    const { id, username, imageCount, faceCount } = user;
+    this.setState({ user: { id, username, imageCount, faceCount } });
   };
 
   signOut = () => {
-    this.setState({
-      user : {
-        name: "unknown user",
-        email: "",
-        entries: "unknown",
-        joined: "unknown"
-      }
-    });
+    this.setState(initialState);
     this.onRouteChange("signIn");
-  }
+  };
 
-  onRouteChange = (newRoute) => {
+  onRouteChange = newRoute => {
     if (newRoute === "home") {
-      this.setState({ isSignedIn : true })
+      this.setState({ isSignedIn: true });
     } else {
-      this.setState({ isSignedIn : false })
+      this.setState(initialState);
     }
-    this.setState({route : newRoute});
-  }
+    this.setState({ route: newRoute });
+  };
 
   generateBoxInfo = rawBoxData => {
     const boxObj = {};
@@ -102,24 +112,36 @@ class App extends Component {
 
   render() {
     const { url, boxes, route, isSignedIn, user } = this.state;
-    const { name, entries} = user;
+    //const { id, username, imageCount, faceCount} = user;
+    console.log(user);
     return (
       <div className="App courier">
         <Particles className="particles" params={params} />
-        <Navigation isSignedIn = {isSignedIn} signOut = {this.signOut} onRouteChange = {this.onRouteChange}/>
-        {route === "signIn" && <SignIn loadUser = {this.loadUser} onRouteChange = {this.onRouteChange} />}
-        {route === "register" && <Register loadUser = {this.loadUser} onRouteChange = {this.onRouteChange}/>}
-        {route === "home" &&
+        <Navigation
+          isSignedIn={isSignedIn}
+          signOut={this.signOut}
+          onRouteChange={this.onRouteChange}
+        />
+        {route === "signIn" && (
+          <SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
+        )}
+        {route === "register" && (
+          <Register
+            loadUser={this.loadUser}
+            onRouteChange={this.onRouteChange}
+          />
+        )}
+        {route === "home" && (
           <React.Fragment>
             <Logo />
-            <Rank name = {name} entries = {entries} />
+            <Stats user={user} />
             <ImageLinkForm
               onSubmit={this.onSubmit}
               onInputChange={this.onInputChange}
             />
             <FaceRecognition boxes={boxes} url={url} />
           </React.Fragment>
-        }
+        )}
       </div>
     );
   }
