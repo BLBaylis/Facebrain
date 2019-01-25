@@ -24,15 +24,16 @@ class SignIn extends Component {
           this.props.loadUser(user);
           this.props.onRouteChange("home");
         } else {
-          console.log(user);
+          console.error("invalid user");
         }
-      });
+      })
+      .catch(console.error);
   };
 
   render() {
     const { onRouteChange } = this.props;
     return (
-      <article className="br3 shadow-5 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 center">
+      <article className="br3 b--black-10 mv4 w-100 w-50-m w-25-l mw6 center">
         <main className="pa4 black-80">
           <form onSubmit={this.onSignInSubmit} className="measure">
             <fieldset id="sign_up" className="ba b--transparent ph0 mh0">

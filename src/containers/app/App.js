@@ -1,15 +1,11 @@
 import React, { Component } from "react";
 import Clarifai from "clarifai";
-import Particles from "react-particles-js";
-import Navigation from "./components/navigation/Navigation";
-import Logo from "./components/logo/Logo";
-import ImageLinkForm from "./components/imageLinkForm/ImageLinkForm";
-import FaceRecognition from "./components/faceRecognition/FaceRecognition";
-import SignIn from "./components/signIn/SignIn";
-import Register from "./components/register/Register";
-import Stats from "./components/stats/Stats";
-import "./App.css";
-import params from "./particlesConfig";
+import ParticlesWrapper from "../particlesWrapper/ParticlesWrapper";
+import Navigation from "../../components/navigation/Navigation";
+import Home from "../../components/home/Home";
+import SignIn from "../signIn/SignIn";
+import Register from "../register/Register";
+import params from "../../particlesConfig";
 
 const app = new Clarifai.App({
   apiKey: "94cc0409d4ab41698e2988f413cc60ef"
@@ -57,7 +53,8 @@ class App extends Component {
             id: this.state.user.id,
             faceCountIncre: boxes.length
           })
-        });
+        })
+        .catch(console.error);
         this.setState({
           boxes,
           user: {
@@ -70,7 +67,7 @@ class App extends Component {
   };
 
   loadUser = user => {
-    const { id, username, imageCount, faceCount } = user;
+    const { id, username, image_count : imageCount, face_count : faceCount } = user;
     this.setState({ user: { id, username, imageCount, faceCount } });
   };
 
@@ -112,11 +109,11 @@ class App extends Component {
 
   render() {
     const { url, boxes, route, isSignedIn, user } = this.state;
-    //const { id, username, imageCount, faceCount} = user;
-    console.log(user);
+    let className = "App courier flex flex-column";
+    if (!isSignedIn) {className += ' justify-center'}
     return (
-      <div className="App courier">
-        <Particles className="particles" params={params} />
+      <div className= {className}>
+        <ParticlesWrapper params={params} />
         <Navigation
           isSignedIn={isSignedIn}
           signOut={this.signOut}
@@ -131,17 +128,15 @@ class App extends Component {
             onRouteChange={this.onRouteChange}
           />
         )}
-        {route === "home" && (
-          <React.Fragment>
-            <Logo />
-            <Stats user={user} />
-            <ImageLinkForm
-              onSubmit={this.onSubmit}
-              onInputChange={this.onInputChange}
-            />
-            <FaceRecognition boxes={boxes} url={url} />
-          </React.Fragment>
-        )}
+        {route === "home" &&
+          <Home
+            user={user}
+            onSubmit={this.onSubmit}
+            onInputChange={this.onInputChange}
+            boxes={boxes}
+            url={url}
+          />
+        }
       </div>
     );
   }

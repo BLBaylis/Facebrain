@@ -14,9 +14,8 @@ class Register extends Component {
   onRegisterSubmit = event => {
     event.preventDefault();
     let { email, password, username } = this.state;
-    if (!email || !password) {
-      email = null;
-      password = null;
+    if (!username || !email || !password) {
+      return;
     }
     fetch("http://localhost:4000/register", {
       method: "post",
@@ -25,16 +24,18 @@ class Register extends Component {
     })
       .then(res => res.json())
       .then(user => {
+        console.log(user);
         if (user.id) {
           this.props.loadUser(user);
           this.props.onRouteChange("home");
         }
-      });
+      })
+      .catch(console.error);
   };
 
   render() {
     return (
-      <article className="br3 shadow-5 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 center">
+      <article className="br3 mv4 w-100 w-50-m w-25-l mw6 center">
         <main className="pa4 black-80">
           <form onSubmit={this.onRegisterSubmit} className="measure">
             <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
