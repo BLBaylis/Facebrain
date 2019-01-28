@@ -7,7 +7,7 @@ const Navigation = ({ onRouteChange, isSignedIn, signOut }) => {
         display: "flex",
         justifyContent: "flex-end",
         position: "absolute",
-        top : 0,
+        top: 0,
         right: 0
       }}
     >

@@ -17,7 +17,7 @@ class Register extends Component {
     if (!username || !email || !password) {
       return;
     }
-    fetch("http://localhost:4000/register", {
+    fetch("https://bradnet.herokuapp.com/register", {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password, username, service: "facebrain" })

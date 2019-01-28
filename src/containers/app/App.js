@@ -1,15 +1,10 @@
 import React, { Component } from "react";
-import Clarifai from "clarifai";
 import ParticlesWrapper from "../particlesWrapper/ParticlesWrapper";
 import Navigation from "../../components/navigation/Navigation";
 import Home from "../../components/home/Home";
 import SignIn from "../signIn/SignIn";
 import Register from "../register/Register";
 import params from "../../particlesConfig";
-
-const app = new Clarifai.App({
-  apiKey: "94cc0409d4ab41698e2988f413cc60ef"
-});
 
 const initialState = {
   input: "",
@@ -32,42 +27,54 @@ class App extends Component {
     this.setState({ input: event.target.value });
   };
 
-  onSubmit = event => {
-    this.setState({ url: this.state.input, input: "" });
-    app.models
-      .initModel({ id: Clarifai.FACE_DETECT_MODEL })
-      .then(model => {
-        return model.predict(this.state.url);
+  onSubmit = async event => {
+    await this.setState({ url: this.state.input });
+    if (this.state.url === "") {
+      return;
+    }
+    const imageUrlJson = await fetch("https://bradnet.herokuapp.com/imageurl", {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        imageUrl: this.state.url
       })
-      .then(response => {
-        const regions = response["outputs"][0]["data"]["regions"];
-        return regions.map(region =>
-          this.generateBoxInfo(region["region_info"]["bounding_box"])
-        );
+    });
+    if (!imageUrlJson.ok) {
+      return console.error(imageUrlJson.statusText);
+    }
+    const imageUrlRes = await imageUrlJson.json();
+    const regions = imageUrlRes["outputs"][0]["data"]["regions"];
+    const boxes = regions.map(region =>
+      this.generateBoxInfo(region["region_info"]["bounding_box"])
+    );
+    const dbUpdate = await fetch("https://bradnet.herokuapp.com/image", {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id: this.state.user.id,
+        faceCountIncre: boxes.length
       })
-      .then(boxes => {
-        fetch("http://localhost:4000/image", {
-          method: "post",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            id: this.state.user.id,
-            faceCountIncre: boxes.length
-          })
-        })
-        .catch(console.error);
-        this.setState({
-          boxes,
-          user: {
-            ...this.state.user,
-            imageCount: this.state.user.imageCount + 1,
-            faceCount: this.state.user.faceCount + boxes.length
-          }
-        });
-      });
+    });
+    if (!dbUpdate.ok) {
+      return console.error(dbUpdate.statusText);
+    }
+    this.setState({
+      boxes,
+      user: {
+        ...this.state.user,
+        imageCount: this.state.user.imageCount + 1,
+        faceCount: this.state.user.faceCount + boxes.length
+      }
+    });
   };
 
   loadUser = user => {
-    const { id, username, image_count : imageCount, face_count : faceCount } = user;
+    const {
+      id,
+      username,
+      image_count: imageCount,
+      face_count: faceCount
+    } = user;
     this.setState({ user: { id, username, imageCount, faceCount } });
   };
 
@@ -110,9 +117,11 @@ class App extends Component {
   render() {
     const { url, boxes, route, isSignedIn, user } = this.state;
     let className = "App courier flex flex-column";
-    if (!isSignedIn) {className += ' justify-center'}
+    if (!isSignedIn) {
+      className += " justify-center";
+    }
     return (
-      <div className= {className}>
+      <div className={className}>
         <ParticlesWrapper params={params} />
         <Navigation
           isSignedIn={isSignedIn}
@@ -128,7 +137,7 @@ class App extends Component {
             onRouteChange={this.onRouteChange}
           />
         )}
-        {route === "home" &&
+        {route === "home" && (
           <Home
             user={user}
             onSubmit={this.onSubmit}
@@ -136,7 +145,7 @@ class App extends Component {
             boxes={boxes}
             url={url}
           />
-        }
+        )}
       </div>
     );
   }

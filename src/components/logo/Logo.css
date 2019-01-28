@@ -1,16 +1,16 @@
 .tilt {
   background: linear-gradient(89deg, #ff5edf 0%, #04c8de 100%);
-  height : 125px;
-  width : 125px;
+  height: 125px;
+  width: 125px;
 }
 
 .tilt-inner {
   height: 100%;
 }
 
-@media (min-width : 350px) {
+@media (min-width: 350px) {
   .tilt {
-    height : 150px;
-    width : 150px;
+    height: 150px;
+    width: 150px;
   }
 }

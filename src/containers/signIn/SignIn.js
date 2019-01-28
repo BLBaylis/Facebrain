@@ -13,7 +13,7 @@ class SignIn extends Component {
   onSignInSubmit = event => {
     event.preventDefault();
     const { email, password } = this.state;
-    fetch("http://localhost:4000/signin", {
+    fetch("https://bradnet.herokuapp.com/signin", {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password, service: "facebrain" })
