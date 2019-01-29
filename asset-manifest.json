@@ -1,7 +1,7 @@
 {
   "main.css": "/facebrain/static/css/main.719687df.chunk.css",
-  "main.js": "/facebrain/static/js/main.e69a660d.chunk.js",
-  "main.js.map": "/facebrain/static/js/main.e69a660d.chunk.js.map",
+  "main.js": "/facebrain/static/js/main.49d7e916.chunk.js",
+  "main.js.map": "/facebrain/static/js/main.49d7e916.chunk.js.map",
   "static/css/1.8e7c208d.chunk.css": "/facebrain/static/css/1.8e7c208d.chunk.css",
   "static/js/1.1e747438.chunk.js": "/facebrain/static/js/1.1e747438.chunk.js",
   "static/js/1.1e747438.chunk.js.map": "/facebrain/static/js/1.1e747438.chunk.js.map",
@@ -10,6 +10,6 @@
   "static/css/1.8e7c208d.chunk.css.map": "/facebrain/static/css/1.8e7c208d.chunk.css.map",
   "static/css/main.719687df.chunk.css.map": "/facebrain/static/css/main.719687df.chunk.css.map",
   "index.html": "/facebrain/index.html",
-  "precache-manifest.7f4ef94c6541f5bebb646dea47574f01.js": "/facebrain/precache-manifest.7f4ef94c6541f5bebb646dea47574f01.js",
+  "precache-manifest.362b824a060b190f4740c4ab99ccf74c.js": "/facebrain/precache-manifest.362b824a060b190f4740c4ab99ccf74c.js",
   "service-worker.js": "/facebrain/service-worker.js"
 }
