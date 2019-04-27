@@ -1,10 +1,11 @@
 {
   "name": "facebrain",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "homepage": "https://blbaylis.github.io/facebrain",
   "dependencies": {
     "clarifai": "^2.9.0",
+    "dotenv": "^7.0.0",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
     "react-particles-js": "^2.4.2",

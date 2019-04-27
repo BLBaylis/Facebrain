@@ -13,21 +13,21 @@ class SignIn extends Component {
   onSignInSubmit = event => {
     event.preventDefault();
     const { email, password } = this.state;
-    fetch("https://bradnet.herokuapp.com/signin", {
+    fetch(`${process.env.API_LINK}/signin`, {
       method: "post",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password, service: "facebrain" })
+      body: JSON.stringify({ email, password })
     })
-      .then(res => res.json())
-      .then(user => {
-        if (user.id) {
-          this.props.loadUser(user);
-          this.props.onRouteChange("home");
-        } else {
-          console.error("invalid user");
-        }
-      })
-      .catch(console.error);
+    .then(res => res.json())
+    .then(user => {
+      if (user.id) {
+        this.props.loadUser(user);
+        this.props.onRouteChange("home");
+      } else {
+        console.error("invalid user");
+      }
+    })
+    .catch(console.error);
   };
 
   render() {

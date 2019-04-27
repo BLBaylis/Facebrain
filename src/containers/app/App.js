@@ -32,7 +32,7 @@ class App extends Component {
     if (this.state.url === "") {
       return;
     }
-    const imageUrlJson = await fetch("https://bradnet.herokuapp.com/imageurl", {
+    const imageUrlJson = await fetch(`${process.env.API_LINK}/imageurl`, {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -47,7 +47,7 @@ class App extends Component {
     const boxes = regions.map(region =>
       this.generateBoxInfo(region["region_info"]["bounding_box"])
     );
-    const dbUpdate = await fetch("https://bradnet.herokuapp.com/image", {
+    const dbUpdate = await fetch(`${process.env.API_LINK}/image`, {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
