@@ -120,7 +120,6 @@ class App extends Component {
     if (!isSignedIn) {
       className += " justify-center";
     }
-    console.log(this.state);
     return (
       <div className={className}>
         <ParticlesWrapper params={params} />
