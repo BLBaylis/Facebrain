@@ -17,7 +17,7 @@ class Register extends Component {
     if (!username || !email || !password) {
       return;
     }
-    fetch(`${process.env.API_LINK}/register`, {
+    fetch(`${process.env.REACT_APP_API_LINK}/register`, {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password, username })

@@ -13,7 +13,7 @@ class SignIn extends Component {
   onSignInSubmit = event => {
     event.preventDefault();
     const { email, password } = this.state;
-    fetch(`${process.env.API_LINK}/signin`, {
+    fetch(`${process.env.REACT_APP_API_LINK}/signin`, {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password })
