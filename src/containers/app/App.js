@@ -72,8 +72,8 @@ class App extends Component {
     const {
       id,
       username,
-      image_count: imageCount,
-      face_count: faceCount
+      imageCount,
+      faceCount
     } = user;
     this.setState({ user: { id, username, imageCount, faceCount } });
   };
@@ -120,6 +120,7 @@ class App extends Component {
     if (!isSignedIn) {
       className += " justify-center";
     }
+    console.log(this.state);
     return (
       <div className={className}>
         <ParticlesWrapper params={params} />
