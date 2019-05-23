@@ -20,7 +20,7 @@ class SignIn extends Component {
     })
     .then(res => res.json())
     .then(user => {
-      if (user.id) {
+      if (user.id) { 
         this.props.loadUser(user);
         this.props.onRouteChange("home");
       } else {
@@ -81,10 +81,7 @@ class SignIn extends Component {
             </div>
             <div className="lh-copy mt3">
               <a
-                onClick={() => {
-                  this.setState({email: "test1@test.com", password: "test"});
-                  this.onSignInSubmit();
-                }}
+                onClick={() => this.setState({email: "test1@test.com", password: "test"}, this.onSignInSubmit)}
                 href="#0"
                 className="f6 link dim black db"
               >Sign in as a guest
