@@ -11,7 +11,7 @@ class SignIn extends Component {
   };
 
   onSignInSubmit = event => {
-    event.preventDefault();
+    if (event) {event.preventDefault()};
     const { email, password } = this.state;
     fetch(`${process.env.REACT_APP_API_LINK}/signin`, {
       method: "post",
@@ -77,6 +77,17 @@ class SignIn extends Component {
                 className="f6 link dim black db"
               >
                 Register
+              </a>
+            </div>
+            <div className="lh-copy mt3">
+              <a
+                onClick={() => {
+                  this.setState({email: "test1@test.com", password: "test"});
+                  this.onSignInSubmit();
+                }}
+                href="#0"
+                className="f6 link dim black db"
+              >Sign in as a guest
               </a>
             </div>
           </form>
